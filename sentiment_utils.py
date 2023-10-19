@@ -1,7 +1,7 @@
 # FIRST: RENAME THIS FILE TO sentiment_utils.py 
 
 # YOUR NAMES HERE:
-
+#Alec Condry and Shrihari Subramaniam
 
 """
 Felix Muzny
@@ -22,6 +22,8 @@ import matplotlib.pyplot as plt
 # so that we can indicate a function in a type hint
 from typing import Callable
 nltk.download('punkt')
+
+import numpy as np
 
 def generate_tuples_from_file(training_file_path: str) -> list:
     """
@@ -117,5 +119,28 @@ def featurize(vocab: list, data_to_be_featurized_X: list, binary: bool = False, 
         a list of sparse vector representations of the data in the format [[count1, count2, ...], ...]
     """
     # using a Counter is essential to having this not take forever
-    #TODO: implement this function
-    pass
+    
+    if verbose:
+        print(f'Initializing featurization with binary mode set to {binary}')
+        
+    result = np.empty([len(data_to_be_featurized_X), len(vocab)])
+
+    if verbose:
+        print('Starting enumeration of data to be featurized')
+    for idx,j in enumerate(data_to_be_featurized_X):
+        sample_map = Counter(j)
+        
+        feature_list = []
+        
+        for i in vocab:
+            if binary == True:
+                x = sample_map.get(i, 0)
+                feature_list.append(1) if x > 0 else feature_list.append(0)
+            else:
+                feature_list.append(sample_map.get(i, 0))
+            
+        if verbose:
+            print(f'Adding featurized list for index {idx} from data to be featurized')
+        result[idx] = feature_list
+    
+    return result
