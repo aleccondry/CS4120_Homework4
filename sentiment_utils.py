@@ -119,13 +119,19 @@ def featurize(vocab: list, data_to_be_featurized_X: list, binary: bool = False, 
         a list of sparse vector representations of the data in the format [[count1, count2, ...], ...]
     """
     # using a Counter is essential to having this not take forever
-    #TODO: implement this function
+    
+    if verbose:
+        print(f'Initializing featurization with binary mode set to {binary}')
+        
     result = np.empty([len(data_to_be_featurized_X), len(vocab)])
 
+    if verbose:
+        print('Starting enumeration of data to be featurized')
     for idx,j in enumerate(data_to_be_featurized_X):
         sample_map = Counter(j)
         
         feature_list = []
+        
         for i in vocab:
             if binary == True:
                 x = sample_map.get(i, 0)
@@ -133,6 +139,8 @@ def featurize(vocab: list, data_to_be_featurized_X: list, binary: bool = False, 
             else:
                 feature_list.append(sample_map.get(i, 0))
             
+        if verbose:
+            print(f'Adding featurized list for index {idx} from data to be featurized')
         result[idx] = feature_list
     
     return result
