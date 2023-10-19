@@ -1,7 +1,7 @@
 # FIRST: RENAME THIS FILE TO sentiment_utils.py 
 
 # YOUR NAMES HERE:
-
+#Alec Condry and Shrihari Subramaniam
 
 """
 Felix Muzny
@@ -22,6 +22,8 @@ import matplotlib.pyplot as plt
 # so that we can indicate a function in a type hint
 from typing import Callable
 nltk.download('punkt')
+
+import numpy as np
 
 def generate_tuples_from_file(training_file_path: str) -> list:
     """
@@ -118,4 +120,19 @@ def featurize(vocab: list, data_to_be_featurized_X: list, binary: bool = False, 
     """
     # using a Counter is essential to having this not take forever
     #TODO: implement this function
-    pass
+    result = np.empty([len(data_to_be_featurized_X), len(vocab)])
+
+    for idx,j in enumerate(data_to_be_featurized_X):
+        sample_map = Counter(j)
+        
+        feature_list = []
+        for i in vocab:
+            if binary == True:
+                x = sample_map.get(i, 0)
+                feature_list.append(1) if x > 0 else feature_list.append(0)
+            else:
+                feature_list.append(sample_map.get(i, 0))
+            
+        result[idx] = feature_list
+    
+    return result
