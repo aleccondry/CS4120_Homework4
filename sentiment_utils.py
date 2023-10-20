@@ -17,6 +17,7 @@ Add any functions to this file that you think will be useful to you in multiple 
 from collections import defaultdict, Counter
 # for tokenizing and precision, recall, f_measure, and accuracy functions
 import nltk
+from nltk.metrics.scores import precision, recall, f_measure, accuracy
 # for plotting
 import matplotlib.pyplot as plt
 # so that we can indicate a function in a type hint
@@ -75,8 +76,24 @@ def get_prfa(dev_y: list, preds: list, verbose=False) -> tuple:
     Returns:
         tuple of precision, recall, f1, and accuracy
     """
-    #TODO: implement this function
-    pass
+    positives = Counter([ref == pred == 1 for ref, pred in zip(dev_y, preds)])
+    negatives = Counter([ref == pred == 0 for ref, pred in zip(dev_y, preds)])
+    tp = positives[True]
+    fp = positives[False]
+    tn = negatives[True]
+    fn = negatives[False]
+
+    prec = tp / (tp + fp)
+    acc = (tp + tn) / len(preds)
+    rec = tp / (tp + fn)
+    f1 = (2 * prec * rec) / (prec + rec)
+
+    if verbose:
+        print(f"Precision = {prec}")
+        print(f"Recall =    {rec}")
+        print(f"f1 score =  {f1}")
+        print(f"Accuracy =  {acc}")
+    return prec, rec, f1, acc
 
 def create_training_graph(metrics_fun: Callable, train_feats: list, dev_feats: list, kind: str, savepath: str = None, verbose: bool = False) -> None:
     """
@@ -107,7 +124,7 @@ def create_index(all_train_data_X: list) -> list:
     pass
 
 
-def featurize(vocab: list, data_to_be_featurized_X: list, binary: bool = False, verbose: bool = False) -> list:
+def featurize(vocab: list, data_to_be_featurized_X: list, binary: bool = False, verbose: bool = False) -> np.ndarray:
     """
     Create vectorized BoW representations of the given data.
     Args:
@@ -119,7 +136,7 @@ def featurize(vocab: list, data_to_be_featurized_X: list, binary: bool = False, 
         a list of sparse vector representations of the data in the format [[count1, count2, ...], ...]
     """
     # using a Counter is essential to having this not take forever
-    
+
     if verbose:
         print(f'Initializing featurization with binary mode set to {binary}')
         
