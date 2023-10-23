@@ -60,7 +60,7 @@ def generate_tuples_from_file(training_file_path: str) -> list:
 
 
 """
-NOTE: for all of the following functions, we have prodived the function signature and docstring, *that we used*, as a guide.
+NOTE: for all of the following functions, we have provided the function signature and docstring, *that we used*, as a guide.
 You are welcome to implement these functions as they are, change their function signatures as needed, or not use them at all.
 Make sure that you properly update any docstrings as needed.
 """
@@ -76,15 +76,19 @@ def get_prfa(dev_y: list, preds: list, verbose=False) -> tuple:
     Returns:
         tuple of precision, recall, f1, and accuracy
     """
-    positives = Counter([ref == pred == 1 for ref, pred in zip(dev_y, preds)])
-    negatives = Counter([ref == pred == 0 for ref, pred in zip(dev_y, preds)])
-    tp = positives[True]
-    fp = positives[False]
-    tn = negatives[True]
-    fn = negatives[False]
+    tp, tn, fp, fn = 0, 0, 0, 0
+    for ref, pred in zip(dev_y, preds):
+        if ref == pred == 1:
+            tp += 1
+        if pred == 1 and pred != ref:
+            fp += 1
+        if ref == pred == 0:
+            tn += 1
+        if pred == 0 and pred != ref:
+            fn += 1
 
     prec = tp / (tp + fp)
-    acc = (tp + tn) / len(preds)
+    acc = (tp + tn) / (tp + tn + fn + fp)
     rec = tp / (tp + fn)
     f1 = (2 * prec * rec) / (prec + rec)
 
