@@ -99,20 +99,27 @@ def get_prfa(dev_y: list, preds: list, verbose=False) -> tuple:
         print(f"Accuracy =  {acc}")
     return prec, rec, f1, acc
 
-def create_training_graph(metrics_fun: Callable, train_feats: list, dev_feats: list, kind: str, savepath: str = None, verbose: bool = False) -> None:
+def create_training_graph(metrics, kind, plot_num, savepath=None, verbose=False) -> None:
     """
     Create a graph of the classifier's performance on the dev set as a function of the amount of training data.
     Args:
-        metrics_fun: a function that takes in training data and dev data and returns a tuple of metrics
-        train_feats: a list of training data in the format [(feats, label), ...]
-        dev_feats: a list of dev data in the format [(feats, label), ...]
+        metrics: a list of tuples returned from get_prfa in order of least training data to most
         kind: the kind of model being used (will go in the title)
+        plot_num: which plot number is being created
         savepath: the path to save the graph to (if None, the graph will not be saved)
         verbose: whether to print the metrics
     """
-    #TODO: implement this function
-    pass
-
+    x = [percentage for percentage in range(10, 101, 10)]
+    plot_labels = ['Precision', 'Recall', 'F1', 'Accuracy']
+    for i in range(0, len(metrics[0])):
+        y = [metric[i] for metric in metrics]
+        plt.plot(x, y, label=plot_labels[i])
+    plt.xlabel("Percentage of Training Data Used")
+    plt.ylabel("Metric's Value")
+    plt.title("Percentage of Training Data Used vs Resulting Metrics")
+    plt.legend()
+    plt.savefig(f"{savepath}plot{plot_num}_{kind}")
+    plt.show()
 
 
 def create_index(all_train_data_X: list) -> list:
