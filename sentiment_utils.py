@@ -124,8 +124,13 @@ def create_index(all_train_data_X: list) -> list:
         vocab: a list of all the unique words in the training data
     """
     # figure out what our vocab is and what words correspond to what indices
-    #TODO: implement this function
-    pass
+    train_flat = []
+    for row in all_train_data_X[0]:
+        train_flat.extend(row)
+
+    #All tokens from train tuples
+    vocab = set(train_flat)
+    return list(vocab)
 
 
 def featurize(vocab: list, data_to_be_featurized_X: list, binary: bool = False, verbose: bool = False) -> np.ndarray:
