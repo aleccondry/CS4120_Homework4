@@ -114,6 +114,7 @@ def create_training_graph(metrics, kind, plot_num, savepath=None, verbose=False)
     for i in range(0, len(metrics[0])):
         y = [metric[i] for metric in metrics]
         plt.plot(x, y, label=plot_labels[i])
+    plt.ylim(0, 1)
     plt.xlabel("Percentage of Training Data Used")
     plt.ylabel("Metric's Value")
     plt.title("Percentage of Training Data Used vs Resulting Metrics")
