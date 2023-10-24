@@ -1,7 +1,7 @@
 # FIRST: RENAME THIS FILE TO sentiment_utils.py 
 
 # YOUR NAMES HERE:
-#Alec Condry and Shrihari Subramaniam
+# Alec Condry (4120) and Shrihari Subramaniam (4120)
 
 """
 Felix Muzny
